@@ -1,0 +1,24 @@
+# PostgreSQL
+*.pem
+*.key
+*.crt
+*.conf.bak
+postgresql.conf
+pg_hba.conf
+pg_ident.conf
+recovery.conf
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
