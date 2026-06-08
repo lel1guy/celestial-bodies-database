@@ -1,127 +1,88 @@
 # Celestial Bodies Database
 
-A PostgreSQL relational database modeling celestial bodies — from galaxy types down to moons — built as part of the [freeCodeCamp Relational Database Certification](https://www.freecodecamp.org/learn/relational-databases-v9/).
+**freeCodeCamp Relational Database Certification** -- Project #1
+
+A PostgreSQL relational database modeling celestial bodies from galaxy types down to moons. Demonstrates multi-table schema design with a 5-level foreign key chain, real astronomical data, and custom data types.
+
+---
+
+## Features
+
+- **5-table hierarchy** -- galaxy_type -> galaxy -> star -> planet -> moon
+- **Foreign key chain** -- each table references its parent, enforcing referential integrity
+- **Real astronomical data** -- populated with actual galaxies (Milky Way, Andromeda), stars (Sun, Sirius, Betelgeuse), planets (8 solar system + 5 exoplanets), and 24 moons
+- **Custom types** -- galaxy classification (Spiral, Elliptical, Irregular, Barred Spiral, Lenticular)
+- **Diverse column types** -- SERIAL, VARCHAR, INT, NUMERIC, BOOLEAN, TEXT with NOT NULL and UNIQUE constraints
 
 ## Technologies
 
-- **PostgreSQL 12**
-- SQL (DDL, DML, constraints, foreign keys, sequences)
+| Tech | Purpose |
+|------|---------|
+| PostgreSQL | Relational database (5 tables) |
+| SQL | DDL, DML, constraints, foreign keys, sequences |
 
 ## Database Schema
 
-The database contains **5 tables** with hierarchical relationships representing the structure of the universe:
-
 ```
-galaxy_type
-    │
-    ▼
-galaxy ──► star ──► planet ──► moon
+universe
++-- galaxy_type
+|   +-- galaxy_type_id  SERIAL PRIMARY KEY
+|   +-- name            VARCHAR UNIQUE NOT NULL
+|   +-- is_spherical    BOOLEAN NOT NULL
+|   +-- mass            NUMERIC
+|
++-- galaxy
+|   +-- galaxy_id           SERIAL PRIMARY KEY
+|   +-- name                VARCHAR UNIQUE NOT NULL
+|   +-- galaxy_type_id      INT -> galaxy_type(galaxy_type_id)
+|   +-- size_light_years    NUMERIC
+|   +-- has_supermassive_bh BOOLEAN NOT NULL
+|   +-- description         TEXT
+|
++-- star
+|   +-- star_id     SERIAL PRIMARY KEY
+|   +-- name        VARCHAR UNIQUE NOT NULL
+|   +-- galaxy_id   INT NOT NULL -> galaxy(galaxy_id)
+|   +-- mass_solar  INT
+|   +-- is_binary   BOOLEAN NOT NULL
+|
++-- planet
+|   +-- planet_id           SERIAL PRIMARY KEY
+|   +-- name                VARCHAR UNIQUE NOT NULL
+|   +-- star_id             INT NOT NULL -> star(star_id)
+|   +-- radius_km           INT
+|   +-- has_rings           BOOLEAN NOT NULL
+|   +-- orbital_period_days NUMERIC
+|   +-- description         TEXT
+|
++-- moon
+    +-- moon_id              SERIAL PRIMARY KEY
+    +-- name                 VARCHAR UNIQUE NOT NULL
+    +-- planet_id            INT NOT NULL -> planet(planet_id)
+    +-- radius_km            INT
+    +-- is_spherical         BOOLEAN NOT NULL
+    +-- surface_pressure_pa  NUMERIC
+    +-- discovered_year      INT
 ```
 
-### Tables
-
-#### `galaxy_type`
-Classification of galaxies (Spiral, Elliptical, Irregular, Barred Spiral, Lenticular).
-
-| Column              | Type      | Constraints        |
-|---------------------|-----------|--------------------|
-| galaxy_type_id      | INT       | PK, SERIAL         |
-| name                | VARCHAR   | NOT NULL, UNIQUE   |
-| is_spherical        | BOOLEAN   | NOT NULL           |
-| mass                | NUMERIC   |                    |
-
-#### `galaxy`
-Individual galaxies with their type, size, and properties.
-
-| Column              | Type      | Constraints              |
-|---------------------|-----------|--------------------------|
-| galaxy_id           | INT       | PK, SERIAL               |
-| name                | VARCHAR   | NOT NULL, UNIQUE         |
-| galaxy_type_id      | INT       | FK → galaxy_type         |
-| size_light_years    | NUMERIC   |                          |
-| has_supermassive_bh | BOOLEAN   | NOT NULL                 |
-| description         | TEXT      |                          |
-
-#### `star`
-Stars within galaxies.
-
-| Column        | Type    | Constraints              |
-|---------------|---------|--------------------------|
-| star_id       | INT     | PK, SERIAL               |
-| name          | VARCHAR | NOT NULL, UNIQUE         |
-| galaxy_id     | INT     | NOT NULL, FK → galaxy    |
-| mass_solar    | INT     |                          |
-| is_binary     | BOOLEAN | NOT NULL                 |
-
-#### `planet`
-Planets orbiting stars, including exoplanets.
-
-| Column                | Type    | Constraints              |
-|-----------------------|---------|--------------------------|
-| planet_id             | INT     | PK, SERIAL               |
-| name                  | VARCHAR | NOT NULL, UNIQUE         |
-| star_id               | INT     | NOT NULL, FK → star      |
-| radius_km             | INT     |                          |
-| has_rings             | BOOLEAN | NOT NULL                 |
-| orbital_period_days   | NUMERIC |                          |
-| description           | TEXT    |                          |
-
-#### `moon`
-Natural satellites orbiting planets.
-
-| Column                | Type    | Constraints              |
-|-----------------------|---------|--------------------------|
-| moon_id               | INT     | PK, SERIAL               |
-| name                  | VARCHAR | NOT NULL, UNIQUE         |
-| planet_id             | INT     | NOT NULL, FK → planet    |
-| radius_km             | INT     |                          |
-| is_spherical          | BOOLEAN | NOT NULL                 |
-| surface_pressure_pa   | NUMERIC |                          |
-| discovered_year       | INT     |                          |
-
-## Data
-
-The database is populated with real astronomical data:
-
-- **5** galaxy types
-- **8** galaxies (Milky Way, Andromeda, Triangulum, etc.)
-- **8** stars (Sun, Proxima Centauri, Sirius, Betelgeuse, etc.)
-- **13** planets (8 solar system planets + 5 exoplanets)
-- **24** moons (Earth's Moon, Galilean moons, Titan, Triton, etc.)
-
-## Setup
-
-### Prerequisites
-
-- PostgreSQL installed and running
-
-### Load the Database
+## How to Run
 
 ```bash
-# Run the SQL dump file to create and populate the database
+# 1. Load the database (creates universe DB, schema, and data)
 psql -U postgres -f universe.sql
+
+# 2. Verify
+psql -U postgres -d universe -c "SELECT COUNT(*) AS galaxies FROM galaxy;"
+psql -U postgres -d universe -c "SELECT COUNT(*) AS moons FROM moon;"
 ```
 
-Or connect to PostgreSQL and run:
+## Files
 
-```sql
-\i universe.sql
-```
+| File | Description |
+|------|-------------|
+| universe.sql | PostgreSQL dump (schema + real astronomical data) |
+| README.md | This file |
 
-### Verify
+## Certification
 
-```bash
-psql -U postgres -d universe -c "SELECT * FROM galaxy;"
-```
-
-## Project Structure
-
-```
-celestial-bodies-database/
-├── README.md           # Project documentation
-└── universe.sql        # Complete database dump (schema + data)
-```
-
-## License
-
-This project was created as part of the freeCodeCamp Relational Database Certification.
+This project is part of freeCodeCamp's **Relational Database Certification**.
