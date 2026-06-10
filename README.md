@@ -1,6 +1,6 @@
 # Celestial Bodies Database
 
-**freeCodeCamp Relational Database Certification** -- Project #1
+**freeCodeCamp Relational Database Certification** — Project #1
 
 A PostgreSQL relational database modeling celestial bodies from galaxy types down to moons. Demonstrates multi-table schema design with a 5-level foreign key chain, real astronomical data, and custom data types.
 
@@ -8,11 +8,11 @@ A PostgreSQL relational database modeling celestial bodies from galaxy types dow
 
 ## Features
 
-- **5-table hierarchy** -- galaxy_type -> galaxy -> star -> planet -> moon
-- **Foreign key chain** -- each table references its parent, enforcing referential integrity
-- **Real astronomical data** -- populated with actual galaxies (Milky Way, Andromeda), stars (Sun, Sirius, Betelgeuse), planets (8 solar system + 5 exoplanets), and 24 moons
-- **Custom types** -- galaxy classification (Spiral, Elliptical, Irregular, Barred Spiral, Lenticular)
-- **Diverse column types** -- SERIAL, VARCHAR, INT, NUMERIC, BOOLEAN, TEXT with NOT NULL and UNIQUE constraints
+- **5-table hierarchy** — galaxy_type -> galaxy -> star -> planet -> moon
+- **Foreign key chain** — each table references its parent, enforcing referential integrity
+- **Real astronomical data** — populated with actual galaxies (Milky Way, Andromeda), stars (Sun, Sirius, Betelgeuse), planets (8 solar system + 5 exoplanets), and 24 moons
+- **Custom types** — galaxy classification (Spiral, Elliptical, Irregular, Barred Spiral, Lenticular)
+- **Diverse column types** — SERIAL, VARCHAR, INT, NUMERIC, BOOLEAN, TEXT with NOT NULL and UNIQUE constraints
 
 ## Technologies
 
